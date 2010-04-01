@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 class Placeholder(models.Model):
     slot = models.CharField(_("slot"), max_length=50, db_index=True, editable=False)
     default_width = models.PositiveSmallIntegerField(_("width"), null=True, editable=False)
+    noedit = models.BooleanField(default=False, verbose_name=_("disable frontend editing"), editable=False)
     
     def __unicode__(self):
         return self.slot
@@ -22,4 +23,4 @@ class Placeholder(models.Model):
         from cms.utils.plugin import render_plugins_for_context
         if not 'request' in context:
             return '<!-- missing request -->'
-        return render_plugins_for_context(self, context, width or self.default_width)
+        return render_plugins_for_context(self, context, width or self.default_width, self.noedit)

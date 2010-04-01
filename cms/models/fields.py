@@ -36,9 +36,10 @@ class PlaceholderFormField(forms.Field):
 
 
 class PlaceholderField(models.ForeignKey):
-    def __init__(self, slotname, default_width=None, **kwargs):
+    def __init__(self, slotname, default_width=None, noedit=False, **kwargs):
         self.slotname = slotname
         self.default_width = default_width
+        self.noedit = noedit
         kwargs.update({'null':True}) # always allow Null
         super(PlaceholderField, self).__init__(Placeholder, **kwargs)
     
@@ -53,7 +54,8 @@ class PlaceholderField(models.ForeignKey):
         return PlaceholderFormField(required=False, widget=widget, **defaults)
     
     def _get_new_placeholder(self):
-        return Placeholder.objects.create(slot=self.slotname, default_width=self.default_width) 
+        return Placeholder.objects.create(slot=self.slotname,
+            default_width=self.default_width, noedit=self.noedit) 
 
     def pre_save(self, model_instance, add):
         if not model_instance.pk:
