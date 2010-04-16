@@ -25,7 +25,7 @@
     height:41px;
     width:100%;
     min-width:960px;
-    zoom:1px;
+    zoom:1;
     border-bottom:2px solid #ddd;
     background:url(../images/cms_toolbar.png) repeat-x 0 0;
 }
@@ -60,7 +60,7 @@
 #cms_toolbar_col1
 {
     float:left;
-    zoom:1px;
+    zoom:1;
     overflow:hidden;
 }
 
@@ -81,7 +81,7 @@
     font-family:"Lucida Grande", "Lucida Sans Unicode", sans-serif;
     font-size:12px;
     color:#656565;
-    zoom:1px;
+    zoom:1;
 }
 
 .cms_toolbar strong,
@@ -303,63 +303,62 @@ span.cms_toolbar_icon.cms_toolbar_state-icon.del
 {
     background-position:-190px -188px;
 }
-
-    .cms_toolbar_submenu {
-        padding:0;
-        z-index:70012;
-        display:none;
-        position:absolute;
-        width:auto;
-        min-width:145px;
-    }
-    ul.cms_toolbar_submenu, .cms_toolbar_submenu ul, .cms_toolbar_submenu li {
-        list-style: none;
-    }
-    .cms_toolbar_submenu.open {
-        display:block;
-        border:1px solid #E8E8E8;
-        -moz-border-radius:5px;
-        -webkit-border-radius:5px;
-        background:#fff;white-space:nowrap; 
-        overflow: visible !important;
-    }   
-    .cms_toolbar_submenu li{
-        clear:both;
-        zoom:1;
-        height:27px;
-        /*line-height: 27px;*/
-        width:100%;
-        -white-space:nowrap;
-        position: relative;
-    }
-    .cms_toolbar_submenu li:hover {
-        background-color: #lavender;
-    }
-    .cms_toolbar_submenu li .cms_toolbar_subsubmenu {
-        padding:0;
-        z-index:70013;
-        display:none;
-        position:absolute;
-        width:auto;
-        min-width:150px;
-        top: -1px;
-    }       
-    .cms_toolbar_submenu.open li:hover .cms_toolbar_subsubmenu {
-        display:block;
-        border:1px solid #E8E8E8;
-        -moz-border-radius:5px;
-        -webkit-border-radius:5px;
-        background:#fff;white-space:nowrap; 
-        overflow-x: auto !important;
-        overflow-y: auto !important;
-    }   
-    .cms_toolbar_submenu li {
-        clear:both;
-        zoom:1;
-        height:27px;
-        width:100%;
-        white-space:nowrap;
-    }
+.cms_toolbar_submenu {
+    padding:0;
+    z-index:70012;
+    display:none;
+    position:absolute;
+    width:auto;
+    min-width:145px;
+}
+ul.cms_toolbar_submenu, .cms_toolbar_submenu ul, .cms_toolbar_submenu li {
+    list-style: none;
+}
+.cms_toolbar_submenu.open {
+    display:block;
+    border:1px solid #E8E8E8;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    background:#fff;white-space:nowrap; 
+    overflow: visible !important;
+}   
+.cms_toolbar_submenu li{
+    clear:both;
+    zoom:1;
+    height:27px;
+    /*line-height: 27px;*/
+    width:100%;
+    -white-space:nowrap;
+    position: relative;
+}
+.cms_toolbar_submenu li:hover {
+    background-color: #lavender;
+}
+.cms_toolbar_submenu li .cms_toolbar_subsubmenu {
+    padding:0;
+    z-index:70013;
+    display:none;
+    position:absolute;
+    width:auto;
+    min-width:150px;
+    top: -1px;
+}       
+.cms_toolbar_submenu.open li:hover .cms_toolbar_subsubmenu {
+    display:block;
+    border:1px solid #E8E8E8;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    background:#fff;white-space:nowrap; 
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}   
+.cms_toolbar_submenu li {
+    clear:both;
+    zoom:1;
+    height:27px;
+    width:100%;
+    white-space:nowrap;
+}
 
 .cms_toolbar_submenu a
 {
