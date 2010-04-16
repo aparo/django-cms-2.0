@@ -115,3 +115,9 @@ CMS_DBGETTEXT_SLUGS = False # (still experimental)
 
 # Enable non-cms placeholder frontend editing
 PLACEHOLDER_FRONTEND_EDITING = True
+
+#Define the plugin base template list
+PLUGIN_BASE_TEMPLATES = (("cms/plugins/empty.html", "Empty"), )
+
+#Define the plugin base template
+DEFAULT_PLUGIN_BASETEMPLATE = None

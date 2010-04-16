@@ -17,6 +17,7 @@ class TeaserPlugin(CMSPluginBase):
         else:
             link = ""
         context.update({
+            'title':_("Teaser"),
             'object':instance, 
             'placeholder':placeholder,
             'link':link

@@ -10,3 +10,17 @@ class TwitterRecentEntries(CMSPlugin):
     
     def __unicode__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        """
+        The save function overloading to set some properties.
+        
+        Arguments
+        ~~~~~~~~~
+        
+        * args: a variant list of arguments
+        * kwargs: a dictionary of arguments (key, value)
+        """
+
+        self.editable = True
+        super(TwitterRecentEntries, self).save(*args, **kwargs)

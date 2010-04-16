@@ -10,6 +10,7 @@ class TwitterRecentEntriesPlugin(CMSPluginBase):
     
     def render(self, context, instance, placeholder):
         context.update({
+            'title':_("Twitter"),
             'object': instance,
         })
         return context

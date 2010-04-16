@@ -304,37 +304,62 @@ span.cms_toolbar_icon.cms_toolbar_state-icon.del
     background-position:-190px -188px;
 }
 
-.cms_toolbar_submenu
-{
-    z-index:70012;
-    display:none;
-    position:absolute;
-    width:auto;
-    min-width:130px;
-    top:29px;
-    right:0;
-    padding:0;
-}
-
-.open .cms_toolbar_submenu
-{
-    display:block;
-    border:1px solid #E8E8E8;
-    -moz-border-radius:5px;
-    -webkit-border-radius:5px;
-    background:#fff;
-    white-space:nowrap;
-    padding:5px;
-}
-
-.cms_toolbar_submenu li
-{
-    clear:both;
-    zoom:1px;
-    height:27px;
-    width:100%;
-    white-space:nowrap;
-}
+    .cms_toolbar_submenu {
+        padding:0;
+        z-index:70012;
+        display:none;
+        position:absolute;
+        width:auto;
+        min-width:145px;
+    }
+    ul.cms_toolbar_submenu, .cms_toolbar_submenu ul, .cms_toolbar_submenu li {
+        list-style: none;
+    }
+    .cms_toolbar_submenu.open {
+        display:block;
+        border:1px solid #E8E8E8;
+        -moz-border-radius:5px;
+        -webkit-border-radius:5px;
+        background:#fff;white-space:nowrap; 
+        overflow: visible !important;
+    }   
+    .cms_toolbar_submenu li{
+        clear:both;
+        zoom:1;
+        height:27px;
+        /*line-height: 27px;*/
+        width:100%;
+        -white-space:nowrap;
+        position: relative;
+    }
+    .cms_toolbar_submenu li:hover {
+        background-color: #lavender;
+    }
+    .cms_toolbar_submenu li .cms_toolbar_subsubmenu {
+        padding:0;
+        z-index:70013;
+        display:none;
+        position:absolute;
+        width:auto;
+        min-width:150px;
+        top: -1px;
+    }       
+    .cms_toolbar_submenu.open li:hover .cms_toolbar_subsubmenu {
+        display:block;
+        border:1px solid #E8E8E8;
+        -moz-border-radius:5px;
+        -webkit-border-radius:5px;
+        background:#fff;white-space:nowrap; 
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+    }   
+    .cms_toolbar_submenu li {
+        clear:both;
+        zoom:1;
+        height:27px;
+        width:100%;
+        white-space:nowrap;
+    }
 
 .cms_toolbar_submenu a
 {

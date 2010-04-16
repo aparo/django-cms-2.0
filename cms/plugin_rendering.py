@@ -9,6 +9,7 @@ from django.template.defaultfilters import title
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils.safestring import mark_safe
+from cms.cms_plugin_processors import wrap_basetemplate as wrap_basetemplate_processor
 import copy
 
 def plugin_meta_context_processor(instance, placeholder):
@@ -37,6 +38,7 @@ DEFAULT_PLUGIN_CONTEXT_PROCESSORS = (
 
 # these are always called after all other plugin processors
 DEFAULT_PLUGIN_PROCESSORS = (
+    wrap_basetemplate_processor,
     mark_safe_plugin_processor,
 )
 

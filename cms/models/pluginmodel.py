@@ -49,6 +49,16 @@ class CMSPlugin(MpttPublisher):
     rght = models.PositiveIntegerField(db_index=True, editable=False)
     tree_id = models.PositiveIntegerField(db_index=True, editable=False)
 
+    #plugin graphic options
+    plugin_basetemplate = models.CharField(_("plugin_basetemplate"), max_length=250, null=True, editable=False)
+    editable = models.BooleanField(default=False, editable=False)    
+    deletable = models.BooleanField(default=False, editable=False)
+    closable = models.BooleanField(default=False, editable=False)
+    collapsable = models.BooleanField(default=False, editable=False)
+    refreshable = models.BooleanField(default=True, editable=False)
+    refresh_rate = models.PositiveIntegerField(default=0, editable=False)
+    extraclass = models.CharField(_("extra class"), max_length=50, blank=True, null=True, editable=False)
+
     class RenderMeta:
         index = 0
         total = 1
@@ -150,6 +160,9 @@ class CMSPlugin(MpttPublisher):
             return u''
         
     def save(self, no_signals=False, *args, **kwargs):
+        if not self.plugin_basetemplate:
+            self.plugin_basetemplate = getattr(settings, 'DEFAULT_PLUGIN_BASETEMPLATE', None)
+            
         if no_signals:# ugly hack because of mptt
             super(CMSPlugin, self).save_base(cls=self.__class__)
         else:

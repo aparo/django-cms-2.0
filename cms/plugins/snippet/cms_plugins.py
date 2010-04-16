@@ -31,6 +31,7 @@ class SnippetPlugin(CMSPluginBase):
         except Exception, e:
             content = str(e)
         context.update({
+            'snippet':_("Snippet"),
             'content': mark_safe(content),
         })
         return context

@@ -177,8 +177,11 @@ jQuery(document).ready(function($) {
         }
     }
 
-    function hideCMStoolbarSubmenus(){            
-        $(".cms_toolbar_submenubutton").removeClass("open");
+    function hideCMStoolbarSubmenus(){          
+        $(".cms_toolbar_submenubutton")
+            .removeClass("open");
+        $(".cms_toolbar_submenu.open")
+            .remove();
     }
 
     $(document).ready(function () {
@@ -225,23 +228,40 @@ jQuery(document).ready(function($) {
                 cmsSubmenuHit = true;
                 wasOpen = false;                    
                 if(cmsClicked.hasClass("open")){wasOpen = true;}                                        
-                hideCMStoolbarSubmenus();                    
-                if(wasOpen == false){
-                    cmsClicked.addClass("open");                                                
+                hideCMStoolbarSubmenus();              
                 
-                    cmsClicked.find("ul").width("auto")
-                    cmsClicked.find("li a").width("auto")
+                if(wasOpen == false) {
+                    cmsClicked.addClass("open");
+                    menu = cmsClicked.find(".cms_toolbar_submenu")
+                        .clone()
+                        .addClass('cms_hack_external');
+                    $(document.body).append($(menu));
+                    menu
+                        .css('left', cmsClicked.offset().left + cmsClicked.innerWidth() - $(menu).innerWidth())
+                        .css('top', cmsClicked.offset().top + cmsClicked.innerHeight() + 3)
+                        .addClass("open");
+                    menu.find('li a').click(function(){
+                        cmsClicked.find('li a[rel='+$(this).attr('rel')+']').click();
+                    })
+                    submenu = menu.find('.cms_toolbar_subsubmenu');
+                    if (menu.offset().left + (menu.innerWidth()*2) > $(document.body).innerWidth())
+                        submenu.css('left', '-100%');
+                    else
+                        submenu.css('right', '-100%');
+                
+                    menu.find("ul").width("auto")
+                    menu.find("li a").width("auto")
                     var maxW = 0;
-                    cmsClicked.find("li a").each(function(){
+                    menu.find("li a").each(function(){
                         if ($(this).width() > maxW)
-                             maxW = $(this).width();
-                    });    
-                    cmsClicked.find("li a").width((maxW)+"px")                        
-                    cmsClicked.find("ul").width((maxW+40)+"px")
+                            maxW = $(this).width();
+                    }); 
+                    menu.find("li a").width((maxW)+"px")
+                    menu.find("ul").width((maxW+20)+"px")
                     
-                    if(cmsClicked.hasClass("cms_toolbar_submenuselect")){
-                        if(cmsClicked.find("ul").height()>=200){
-                            cmsClicked.find("ul").css({height:"200px",width:(maxW+35)+"px"})
+                    if(menu.hasClass("cms_toolbar_submenuselect")){
+                        if(menu.find("ul").height()>=200){
+                            menu.find("ul").css({height:"200px",width:(maxW+35)+"px"})
                         }
                     }
                 
@@ -396,7 +416,9 @@ jQuery(document).ready(function($) {
         $("div.cms_toolbar_placeholder_plugins li a").click(function(e){
             var select = $(this);
             var pluginvalue = select.attr('rel');
-            var div = $(this).parent().parent().parent().parent().parent().parent();
+            
+            var div = $(select).closest('.cms_toolbar_placeholder_plugins');
+
             var placeholder = div.attr("rel")
             var splits = div.attr("id").split("cms_placeholder_")[1].split("_");
             var page_id = splits[1];
