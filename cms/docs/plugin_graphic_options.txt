@@ -1,0 +1,52 @@
+Plugin graphic options
+======================
+
+For advance usage of plugins in different context would be useful to implement a template 
+system that allow to modify the rendering of the plugin depends of context and with different templates.
+This approach is very useful in future if you need to render different templates of the same plugin.
+
+This approach extend the CMS_PLUGIN_PROCESSORS to allow more dinamic customization.
+
+plugin_basetemplate can be set in the context so it's possible to change base template on the fly.
+
+Real world case are implementing a Text with a border and without a border.
+
+plugin_basetemplate
+-------------------
+
+base parent template for the plugin: acts similar to a page template for a page
+
+editable
+--------
+
+if an user can edit options to change content
+
+deletable
+---------
+
+if an user can delete the plugin from a page
+
+closable
+--------
+
+if an user can delete visually from a page. (Ajax close of a box, ... )
+
+closable
+--------
+
+if an user can collapse content. (Ajax collapsing of a box, ... )
+
+refreshable
+-----------
+
+If the content autorefresh 
+
+refresh_rate
+------------
+
+Refresh rate in seconds of the content
+
+extraclass
+----------
+
+Extra class to pass the container wrapper
