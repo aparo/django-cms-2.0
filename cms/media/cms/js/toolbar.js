@@ -409,8 +409,23 @@ jQuery(document).ready(function($) {
         $("#cms_plugin_overlay").mouseenter(function(){
             $("#cms_plugin_overlay").show();
         }).mouseleave(function(){
-            $("#cms_plugin_overlay").hide();
-            hideCMStoolbarSubmenus();
+            var self = this;
+            var timeout = 500;
+            
+            // This is needed because the menu is absolutely positioned, and going
+            // inside it would mean leaving the overlay, which would be hidden
+            function hide_this(){
+                // Hide and close only if it's not open
+                if (!$(self).find('.cms_toolbar_submenubutton').hasClass('open')) {
+                    $("#cms_plugin_overlay").hide();
+                    hideCMStoolbarSubmenus();
+                }
+                
+                // Else try again later, thank you
+                else
+                    setTimeout(hide_this, timeout)
+            }
+            hide_this()
         });
     
         $("div.cms_toolbar_placeholder_plugins li a").click(function(e){

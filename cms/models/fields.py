@@ -68,7 +68,7 @@ class PlaceholderField(models.ForeignKey):
         cls._meta.placeholder_fields[self] = name
         self.model = cls
 
-        
+
 class PageField(models.ForeignKey):
     default_form_class = PageSelectFormField
     default_model_class = Page
