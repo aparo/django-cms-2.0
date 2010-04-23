@@ -1,11 +1,33 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.forms.widgets import Media
-import operator 
+import operator
+from cms.utils.placeholder import PlaceholderNoAction
+
+
+class PlaceholderManager(models.Manager):
+    def _orphans(self):
+        """
+        Private method because it should never actually return anything.
+        """
+        from cms.models import CMSPlugin
+        m2m = self.model._meta.get_all_related_many_to_many_objects()
+        fks = self.model._meta.get_all_related_objects()
+        kwargs = {}
+        for rel in m2m:
+            kwargs[rel.var_name] = None
+        for rel in fks:
+            if rel.model == CMSPlugin:
+                continue
+            kwargs[rel.var_name] = None
+        return self.filter(**kwargs)
+ 
 
 class Placeholder(models.Model):
     slot = models.CharField(_("slot"), max_length=50, db_index=True, editable=False)
     default_width = models.PositiveSmallIntegerField(_("width"), null=True, editable=False)
+
+    objects = PlaceholderManager()
 
     def __unicode__(self):
         return self.slot
@@ -32,3 +54,40 @@ class Placeholder(models.Model):
         if media_classes:
             return reduce(operator.add, media_classes)
         return Media()
+    
+    def _get_attached_field(self):
+        from cms.models import CMSPlugin
+        if not hasattr(self, '_attached_field_cache'):
+            self._attached_field_cache = None
+            for rel in self._meta.get_all_related_objects():
+                if isinstance(rel.model, CMSPlugin):
+                    continue
+                field = getattr(self, rel.get_accessor_name())
+                if field.count():
+                    self._attached_field_cache = rel.field
+        return self._attached_field_cache
+    
+    def _get_attached_field_name(self):
+        field = self._get_attached_field()
+        if field:
+            return field.name
+        return None
+    
+    def _get_attached_model(self):
+        field = self._get_attached_field()
+        if field:
+            return field.model
+        return None
+
+    def get_plugins_list(self):
+        return list(self.get_plugins())
+    
+    def get_plugins(self):
+        return self.cmsplugin_set.all().order_by('tree_id', '-rght')
+    
+    @property
+    def actions(self):
+        if not hasattr(self, '_actions_cache'):
+            field = self._get_attached_field()
+            self._actions_cache = getattr(field, 'actions', PlaceholderNoAction())
+        return self._actions_cache

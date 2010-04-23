@@ -2,16 +2,19 @@ from cms.models.placeholdermodel import Placeholder
 from cms.forms.widgets import PlaceholderPluginEditorWidget
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
+from django.utils.importlib import import_module
 from django.template.loader import render_to_string
 from django.db import models
 from cms.models.pagemodel import Page
 from cms.forms.fields import PageSelectFormField, PlaceholderFormField
+from cms.utils.placeholder import PlaceholderNoAction
 
 
 class PlaceholderField(models.ForeignKey):
-    def __init__(self, slotname, default_width=None, **kwargs):
+    def __init__(self, slotname, default_width=None, actions=PlaceholderNoAction, **kwargs):
         self.slotname = slotname
         self.default_width = default_width
+        self.actions = actions()
         kwargs.update({'null':True}) # always allow Null
         super(PlaceholderField, self).__init__(Placeholder, **kwargs)
     
@@ -63,9 +66,9 @@ class PlaceholderField(models.ForeignKey):
             cls._meta.placeholder_fields = {}
         cls._meta.placeholder_field_names.append(name)
         cls._meta.placeholder_fields[self] = name
-        self.cls = cls
+        self.model = cls
 
-
+        
 class PageField(models.ForeignKey):
     default_form_class = PageSelectFormField
     default_model_class = Page
