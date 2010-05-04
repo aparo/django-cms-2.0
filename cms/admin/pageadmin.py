@@ -1211,6 +1211,21 @@ class PageAdmin(model_admin):
         if request.method == "POST" and not 'history' in request.path:
             pos = 0
             page = None
+            success = False
+            if 'plugin_id' in request.POST:
+                plugin = CMSPlugin.objects.get(pk=int(request.POST['plugin_id']))
+                page = get_page_from_plugin_or_404(plugin)
+                placeholder_slot = request.POST['placeholder']
+                placeholders = get_placeholders(page.template)
+                if not placeholder_slot in placeholders:
+                    return HttpResponse(str("error"))
+                placeholder = page.placeholders.get(slot=placeholder_slot)
+                plugin.placeholder = placeholder
+                # plugin positions are 0 based, so just using count here should give us 'last_position + 1'
+                position = CMSPlugin.objects.filter(placeholder=placeholder).count()
+                plugin.position = position
+                plugin.save()
+                success = True
             if 'ids' in request.POST:
                 for id in request.POST['ids'].split("_"):
                     plugin = CMSPlugin.objects.get(pk=id)
@@ -1223,19 +1238,8 @@ class PageAdmin(model_admin):
                         plugin.position = pos
                         plugin.save()
                     pos += 1
-            elif 'plugin_id' in request.POST:
-                plugin = CMSPlugin.objects.get(pk=int(request.POST['plugin_id']))
-                page = get_page_from_plugin_or_404(plugin)
-                placeholder = request.POST['placeholder']
-                placeholders = get_placeholders(page.template)
-                if not placeholder in placeholders:
-                    return HttpResponse(str("error"))
-                plugin.placeholder = page.placeholders.get(slot=placeholder)
-                # plugin positions are 0 based, so just using count here should give us 'last_position + 1'
-                position = CMSPlugin.objects.filter(placeholder=placeholder).count()
-                plugin.position = position
-                plugin.save()
-            else:
+                success = True
+            if not success:
                 HttpResponse(str("error"))
             if page and 'reversion' in settings.INSTALLED_APPS:
                 page.save()

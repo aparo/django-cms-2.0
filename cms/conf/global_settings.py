@@ -121,3 +121,9 @@ PLUGIN_BASE_TEMPLATES = (("cms/plugins/empty.html", "Empty"), )
 
 #Define the plugin base template
 DEFAULT_PLUGIN_BASETEMPLATE = None
+
+# Cache prefix so one can deploy several sites on one cache server
+CMS_CACHE_PREFIX = 'cms-'
+
+# Menu cache duration
+MENU_CACHE_DURATION = 60 * 60
