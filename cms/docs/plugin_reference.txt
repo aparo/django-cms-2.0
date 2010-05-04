@@ -21,7 +21,13 @@ Will be group the plugin in the plugin editor. If module is None, plugin is grou
 render_template
 ---------------
 
-Will be rendered with the context returned by the render function
+Will be rendered with the context returned by the render function. 
+
+render_template can be:
+
+	- a string: the template name;
+	- a django template object;
+	- a callable that returns a string or a django template object.
 
 render
 ------
