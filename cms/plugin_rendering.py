@@ -89,6 +89,9 @@ class PluginRenderer(object):
     of callables using the "processors" keyword argument.
     """
     def __init__(self, context, instance, placeholder, template, processors=None, current_app=None):
+        if callable(template):
+            #resolve callable
+            template = template(context, instance, placeholder, current_apps)
         if isinstance(template, basestring):
             self.content = render_to_string(template, context)
         elif isinstance(template, Template):
