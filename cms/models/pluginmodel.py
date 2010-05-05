@@ -52,14 +52,14 @@ class CMSPlugin(MpttPublisher):
     tree_id = models.PositiveIntegerField(db_index=True, editable=False)
 
     #plugin graphic options
-    plugin_basetemplate = models.CharField(_("plugin_basetemplate"), max_length=250, null=True, editable=False)
-    editable = models.BooleanField(default=False, editable=False)    
-    deletable = models.BooleanField(default=False, editable=False)
-    closable = models.BooleanField(default=False, editable=False)
-    collapsable = models.BooleanField(default=False, editable=False)
-    refreshable = models.BooleanField(default=True, editable=False)
-    refresh_rate = models.PositiveIntegerField(default=0, editable=False)
-    extraclass = models.CharField(_("extra class"), max_length=50, blank=True, null=True, editable=False)
+    plugin_basetemplate = models.CharField(_("plugin_basetemplate"), max_length=250, null=True)
+    editable = models.BooleanField(default=False)    
+    deletable = models.BooleanField(default=False)
+    closable = models.BooleanField(default=False)
+    collapsable = models.BooleanField(default=False)
+    refreshable = models.BooleanField(default=True)
+    refresh_rate = models.PositiveIntegerField(default=0)
+    extraclass = models.CharField(_("extra class"), max_length=50, blank=True, null=True)
 
     class RenderMeta:
         index = 0
