@@ -118,11 +118,12 @@ def show_menu_below_id(context, root_id=None, from_level=0, to_level=100, extra_
 register.inclusion_tag('cms/dummy.html', takes_context=True)(show_menu_below_id)
 
 
-def show_sub_menu(context, levels=100, template="menu/sub_menu.html"):
+def show_sub_menu(context, levels=100, template="menu/sub_menu.html", root=False):
     """
     show the sub menu of the current nav-node.
     -levels: how many levels deep
     -temlplate: template used to render the navigation
+    -root: starts menu from the root node of the current nav-node
     """
     
     try:
@@ -134,6 +135,8 @@ def show_sub_menu(context, levels=100, template="menu/sub_menu.html"):
     children = []
     for node in nodes:
         if node.selected:
+            if root:
+                node = node.get_root()
             cut_after(node, levels, [])
             children = node.children
             for child in children:
@@ -151,8 +154,7 @@ def show_sub_menu(context, levels=100, template="menu/sub_menu.html"):
     
 show_sub_menu = register.inclusion_tag('cms/dummy.html',
                                        takes_context=True)(show_sub_menu)
-
-
+    
 def show_breadcrumb(context, start_level=0, template="menu/breadcrumb.html"):
     """
     Shows the breadcrumb from the node that has the same url as the current request

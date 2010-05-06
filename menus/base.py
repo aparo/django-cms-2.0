@@ -67,3 +67,13 @@ class NavigationNode(object):
             nodes.append(node)
             nodes += node.get_descendants()
         return nodes
+    
+    def get_root(self, node=None):
+        """
+        Return the root node of a navigation branch
+        """
+        if node is None:
+            node = self
+        if node.parent is None:
+            return node
+        return self.get_root(node.parent)
