@@ -103,7 +103,7 @@ def page_url(context, page_lookup, lang=None, site=None):
 page_url = register.inclusion_tag('cms/content.html', takes_context=True)(page_url)
 
 def page_id_url(context, reverse_id, lang=None, site=None):
-    return page_url(context, {'reverse_id': reverse_id}, lang, site)
+    return page_url(context, reverse_id, lang, site)
 page_id_url = register.inclusion_tag('cms/content.html', takes_context=True)(page_id_url)
 
 def do_placeholder(parser, token):
@@ -188,7 +188,7 @@ class PlaceholderNode(template.Node):
             placeholder = page.placeholders.get(slot=self.name)
         except Placeholder.DoesNotExist:
             from cms.utils.plugins import get_placeholders
-            placeholders = get_placeholders(selected_template)
+            placeholders = get_placeholders(page.get_template())
             found = None
             for slot in placeholders:
                 new, created = page.placeholders.get_or_create(slot=slot)
@@ -456,7 +456,7 @@ class PluginsMediaNode(template.Node):
             return u''
 
     def __repr__(self):
-        return "<PluginsMediaNode Node: %s>" % self.name if hasattr(self, 'name') else ''
+        return "<PluginsMediaNode Node: %s>" % getattr(self, 'name', '')
 
 register.tag('plugins_media', do_plugins_media)
 
