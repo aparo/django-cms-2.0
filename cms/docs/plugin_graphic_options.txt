@@ -1,5 +1,5 @@
-Plugin graphic options
-======================
+GraphicAbstractPlugin
+=====================
 
 For advance usage of plugins in different context would be useful to implement a template 
 system that allow to modify the rendering of the plugin depends of context and with different templates.

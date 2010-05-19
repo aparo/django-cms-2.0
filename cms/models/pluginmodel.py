@@ -51,16 +51,6 @@ class CMSPlugin(MpttPublisher):
     rght = models.PositiveIntegerField(db_index=True, editable=False)
     tree_id = models.PositiveIntegerField(db_index=True, editable=False)
 
-    #plugin graphic options
-    plugin_basetemplate = models.CharField(_("plugin_basetemplate"), max_length=250, null=True, default=settings.DEFAULT_PLUGIN_BASETEMPLATE)
-    editable = models.BooleanField(default=False)    
-    deletable = models.BooleanField(default=False)
-    closable = models.BooleanField(default=False)
-    collapsable = models.BooleanField(default=False)
-    refreshable = models.BooleanField(default=False)
-    refresh_rate = models.PositiveIntegerField(default=0)
-    extraclass = models.CharField(_("extra class"), max_length=50, blank=True, null=True)
-
     class RenderMeta:
         index = 0
         total = 1
@@ -165,10 +155,7 @@ class CMSPlugin(MpttPublisher):
         else:
             return u''
         
-    def save(self, no_signals=False, *args, **kwargs):
-        if not self.plugin_basetemplate:
-            self.plugin_basetemplate = getattr(settings, 'DEFAULT_PLUGIN_BASETEMPLATE', None)
-            
+    def save(self, no_signals=False, *args, **kwargs):            
         if no_signals:# ugly hack because of mptt
             super(CMSPlugin, self).save_base(cls=self.__class__)
         else:
@@ -266,3 +253,21 @@ class CMSPlugin(MpttPublisher):
         return self.position + 1
 
 reversion_register(CMSPlugin)
+
+class GraphicAbstractPlugin(models.Model):
+    """
+    A general graphic abstract plugin to be used to manage different web aspects on rendering plugin
+    """
+    plugin_basetemplate = models.CharField(_("plugin_basetemplate"), max_length=250, 
+                                           blank=True, null=True, 
+                                           default=getattr(settings, "DEFAULT_PLUGIN_BASETEMPLATE", None))
+    editable = models.BooleanField(default=False)    
+    deletable = models.BooleanField(default=False)
+    closable = models.BooleanField(default=False)
+    collapsible = models.BooleanField(default=False)
+    refreshable = models.BooleanField(default=False)
+    refresh_rate = models.PositiveIntegerField(default=0)
+    extraclass = models.CharField(_("extra class"), max_length=50, blank=True, null=True)
+    
+    class Meta:
+        abstract = True
