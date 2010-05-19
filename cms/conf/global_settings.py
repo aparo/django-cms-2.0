@@ -127,3 +127,6 @@ CMS_CACHE_PREFIX = 'cms-'
 
 # Menu cache duration
 MENU_CACHE_DURATION = 60 * 60
+
+#extra toolbuttons to show
+CMS_TOOLBAR_ITEMS = []
