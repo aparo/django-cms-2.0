@@ -124,3 +124,12 @@ page_submit_row = register.inclusion_tag('admin/page_submit_line.html', takes_co
 def in_filtered(seq1, seq2):
     return [x for x in seq1 if x in seq2]
 in_filtered = register.filter('in_filtered', in_filtered)
+
+def extra_toolbar(context):
+    from django.template.loader import render_to_string
+    content = []
+    for element in getattr(settings, "CMS_TOOLBAR_ITEMS", []):
+        content.append(render_to_string(element, context))
+    return {'content': mark_safe(u''.join(content))}
+
+extra_toolbar = register.inclusion_tag('cms/content.html', takes_context=True)(extra_toolbar)

@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n cms_admin %}
 <style type="text/css">    
     @import "{{ CMS_MEDIA_URL }}css/toolbar.css";
 </style>
@@ -16,7 +16,7 @@
 <script type="text/javascript" src="{{ CMS_MEDIA_URL }}js/lib/jquery.cookie.js"></script> 
 <script type="text/javascript" src="{{ CMS_MEDIA_URL }}js/lib/jquery.backgroundposition.js"></script> 
 <script type="text/javascript" src="{{ CMS_MEDIA_URL }}js/tools.js"></script>
-<script type="text/javascript" src="{{ CMS_MEDIA_URL }}js/lib/jquery.nyroModal-1.6.2.pack.js"></script>
+<script type="text/javascript" src="{{ CMS_MEDIA_URL }}js/lib/jquery.nyroModal-1.6.2.pack.js"></script>
 <script type="text/javascript" charset="utf-8">
     //<![CDATA[
     // dynamic variables for the toolbar js file
@@ -96,6 +96,7 @@
         </div>
         {% endif %}
         {% if auth %}
+		{% extra_toolbar %}
         <div id="cms_toolbar_pagebutton" class="cms_toolbar_pagebutton cms_toolbar_button cms_toolbar_submenubutton"><span><strong>Page</strong><em>arrow</em></span>        
             <ul id="cms_toolbar_settings_menu" class="cms_toolbar_submenu">                
                 <li class="first"><a href="{% url admin:cms_page_changelist %}"><span class="cms_toolbar_icon_move">{% trans "move" %}</span>{% trans "Move/add Pages" %}</a></li>

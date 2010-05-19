@@ -1,4 +1,3 @@
-from cms.models.pagemodel import Page
 from cms.models.placeholdermodel import Placeholder
 from cms.utils.helpers import reversion_register
 from cms.utils.placeholder import get_page_from_placeholder_if_exists
@@ -236,6 +235,14 @@ class CMSPlugin(MpttPublisher):
         """
         Handle copying of any relations attached to this plugin
         """
+        
+    def has_change_permission(self, request):
+        if self.page:
+            return self.page.has_change_permission(request)
+        elif self.placeholder:
+            return self.placeholder.has_change_permission(request)
+        else:
+            return self.parent.has_change_permission(request)
         
     def is_first_in_placeholder(self):
         return self.position == 0

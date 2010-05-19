@@ -115,6 +115,10 @@ class CMSPluginBase(admin.ModelAdmin):
     def render(self, context, instance, placeholder):
         raise NotImplementedError, "render needs to be implemented"
     
+    @property
+    def parent(self):
+        return self.cms_plugin_instance.parent
+    
     def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
         """
         We just need the popup interface here
@@ -138,10 +142,7 @@ class CMSPluginBase(admin.ModelAdmin):
         Not sure if there will be plugin permission requirement in future, but
         if, then this must be changed.
         """
-        if self.page:
-            return self.page.has_change_permission(request)
-        else:
-            return self.placeholder.has_change_permission(request)
+        return self.cms_plugin_instance.has_change_permission(request)
     has_delete_permission = has_change_permission = has_add_permission
     
     def save_model(self, request, obj, form, change):
