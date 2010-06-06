@@ -1,5 +1,4 @@
 from menus.menu_pool import menu_pool
-from cms.utils import get_language_from_request
 from django.contrib.sites.models import Site
 from django import template
 from django.conf import settings
@@ -114,7 +113,7 @@ def show_menu(context, from_level=0, to_level=100, extra_inactive=0, extra_activ
     except:
         context = {"template":template}
     return context
-show_menu = register.inclusion_tag('cms/dummy.html', takes_context=True)(show_menu)
+show_menu = register.inclusion_tag('menu/dummy.html', takes_context=True)(show_menu)
 
 
 def show_menu_below_id(context, root_id=None, from_level=0, to_level=100, extra_inactive=100, extra_active=100, template_file="menu/menu.html", namespace=None, next_page=None):
@@ -122,7 +121,7 @@ def show_menu_below_id(context, root_id=None, from_level=0, to_level=100, extra_
     displays a menu below a node that has an uid
     """
     return show_menu(context, from_level, to_level, extra_inactive, extra_active, template_file, root_id=root_id, namespace=namespace, next_page=next_page)
-register.inclusion_tag('cms/dummy.html', takes_context=True)(show_menu_below_id)
+register.inclusion_tag('menu/dummy.html', takes_context=True)(show_menu_below_id)
 
 
 def show_sub_menu(context, levels=100, template="menu/sub_menu.html", root=False):
@@ -159,7 +158,7 @@ def show_sub_menu(context, levels=100, template="menu/sub_menu.html", root=False
     return context        
     
     
-show_sub_menu = register.inclusion_tag('cms/dummy.html',
+show_sub_menu = register.inclusion_tag('menu/dummy.html',
                                        takes_context=True)(show_sub_menu)
     
 def show_breadcrumb(context, start_level=0, template="menu/breadcrumb.html"):
@@ -201,7 +200,7 @@ def show_breadcrumb(context, start_level=0, template="menu/breadcrumb.html"):
     context.update({'ancestors':ancestors,
                     'template': template})
     return context
-show_breadcrumb = register.inclusion_tag('cms/dummy.html',
+show_breadcrumb = register.inclusion_tag('menu/dummy.html',
                                          takes_context=True)(show_breadcrumb)
 
 
@@ -255,14 +254,14 @@ def language_chooser(context, template=NOT_PROVIDED, i18n_mode='raw'):
         if current_lang != get_language():
             activate(current_lang)
         cache.set(cache_key, languages)
-    lang = get_language_from_request(request, request.current_page)
+    lang = get_language()
     context.update({
         'languages':languages,
         'current_language':lang,
         'template':template,
     })
     return context
-language_chooser = register.inclusion_tag('cms/dummy.html', takes_context=True)(language_chooser)
+language_chooser = register.inclusion_tag('menu/dummy.html', takes_context=True)(language_chooser)
 
 
 def page_language_url(context, lang):
@@ -277,7 +276,10 @@ def page_language_url(context, lang):
     except KeyError:
         return {'template': 'cms/content.html'}
     if hasattr(request, "_language_changer"):
-        request._language_changer.request = request
+        try:
+            setattr(request._language_changer, 'request', request)
+        except AttributeError:
+            pass
         url = "/%s" % lang + request._language_changer(lang)
     else:
         page = request.current_page
