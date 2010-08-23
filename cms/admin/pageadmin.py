@@ -77,7 +77,7 @@ class PageAdmin(model_admin):
     if settings.CMS_DBGETTEXT:
         # no need to select language for page
         add_general_fields.remove('language')
-    advanced_fields = ['reverse_id',  'overwrite_url', 'redirect', 'login_required', 'menu_login_required']
+    advanced_fields = ['reverse_id',  'overwrite_url', 'redirect', 'login_required', 'limit_visibility_in_menu']
     template_fields = ['template']
     change_list_template = "admin/cms/page/change_list.html"
     hidden_fields = ['site', 'parent']
@@ -1129,15 +1129,15 @@ class PageAdmin(model_admin):
                 return HttpResponseBadRequest(_("Language must be different than the copied language!"))
             plugins = list(placeholder.cmsplugin_set.filter(language=copy_from).order_by('tree_id', '-rght'))
             ptree = []
-            new_plugins = []
             for p in plugins:
-                new_plugins.append(p.copy_plugin(placeholder, language, ptree))
+                p.copy_plugin(placeholder, language, ptree)
             if 'reversion' in settings.INSTALLED_APPS:
                 page.save()
                 save_all_plugins(request, page, placeholder)
                 reversion.revision.user = request.user
                 reversion.revision.comment = _(u"Copied %(language)s plugins to %(placeholder)s") % {'language':dict(settings.LANGUAGES)[language], 'placeholder':placeholder}
-            return render_to_response('admin/cms/page/widgets/plugin_item.html', {'plugin_list':new_plugins}, RequestContext(request))
+            plugin_list = CMSPlugin.objects.filter(language=language, placeholder=placeholder, parent=None).order_by('position')
+            return render_to_response('admin/cms/page/widgets/plugin_item.html', {'plugin_list':plugin_list}, RequestContext(request))
         raise Http404
 
     @create_on_success

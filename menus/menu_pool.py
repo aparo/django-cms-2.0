@@ -1,5 +1,6 @@
 from django.conf import settings
 from menus.exceptions import NamespaceAllreadyRegistered
+from menus import settings as menus_settings
 from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.utils.translation import get_language
@@ -131,7 +132,7 @@ class MenuPool(object):
             node.ancestor = False
             node.descendant = False
             node.selected = False
-            if node.get_absolute_url() == request.path[:len(node.get_absolute_url())] and node.visible:
+            if node.get_absolute_url() == request.path[:len(node.get_absolute_url())]:
                 if sel:
                     if len(node.get_absolute_url()) > len(sel.get_absolute_url()):
                         sel = node

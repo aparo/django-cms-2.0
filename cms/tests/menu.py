@@ -53,6 +53,8 @@ class MenusTestCase(CMSTestCase):
         self.all_pages = [self.page1, self.page2, self.page3, self.page4,
                           self.page5, self.page6, self.page7, self.page8]
         self.top_level_pages = [self.page1, self.page4]
+        self.level1_pages = [self.page2, self.page5,self.page7,self.page8]
+        self.level2_pages = [self.page3]
         
     def test_01_basic_cms_menu(self):
         self.assertEqual(len(menu_pool.menus), 1)
@@ -113,7 +115,7 @@ class MenusTestCase(CMSTestCase):
         context = self.get_context()
         # test standard show_menu 
         nodes = show_menu(context, 1, 1, 100, 100)['children']
-        self.assertEqual(len(nodes), len(self.top_level_pages))
+        self.assertEqual(len(nodes), len(self.level1_pages))
         for node in nodes:
             self.assertEqual(len(node.children), 0)
         
@@ -170,10 +172,19 @@ class MenusTestCase(CMSTestCase):
         self.assertEqual(nodes[1].get_absolute_url(), page2.get_absolute_url())
         
     def test_11_language_chooser(self):
+        # test simple language chooser with default args 
         context = self.get_context(path=self.page3.get_absolute_url())
         new_context = language_chooser(context)
-        self.assertEqual(len(new_context['languages']), len(settings.LANGUAGES))
-        self.assertEqual(new_context['current_language'], settings.LANGUAGES[0][0])
+        self.assertEqual(len(new_context['languages']), len(settings.CMS_SITE_LANGUAGES[settings.SITE_ID]))
+        self.assertEqual(new_context['current_language'], settings.LANGUAGE_CODE)
+        # try a different template and some different args
+        new_context = language_chooser(context, 'menu/test_language_chooser.html')
+        self.assertEqual(new_context['template'], 'menu/test_language_chooser.html')
+        new_context = language_chooser(context, 'short', 'menu/test_language_chooser.html')
+        self.assertEqual(new_context['template'], 'menu/test_language_chooser.html')
+        for lang in new_context['languages']:
+            self.assertEqual(*lang)
+        
         
     def test_12_page_language_url(self):
         context = self.get_context(path=self.page3.get_absolute_url())
@@ -272,12 +283,13 @@ class MenusTestCase(CMSTestCase):
         page6 = Page.objects.get(pk=self.page6.pk)
         context = self.get_context(page6.get_absolute_url())
         nodes = show_menu(context, 1, 100, 0, 1)['children']
-        self.assertEqual(len(nodes), 0)
+        self.assertEqual(len(nodes), len(page6.children.all()))
         page7 = Page.objects.get(pk=self.page7.pk)
         context = self.get_context(page7.get_absolute_url())
         nodes = show_menu(context, 1, 100, 0, 1)['children']
-        self.assertEqual(len(nodes), 0)
-        
+        self.assertEqual(len(nodes), len(page6.children.all()))
+        nodes = show_menu(context, 2, 100, 0, 1)['children']
+        self.assertEqual(len(nodes), len(page7.children.all()))
         
         
         

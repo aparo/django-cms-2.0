@@ -34,8 +34,10 @@ def update_site_and_page_choices(lang=None):
     if current_site_pages:
         site_choices.append( (current_site.id, current_site.name ) )
         page_choices.append( (current_site.name, current_site_pages) )
-    cache.set(SITE_CHOICES_KEY, site_choices, settings.CMS_CONTENT_CACHE_DURATION)
-    cache.set(PAGE_CHOICES_KEY, page_choices, settings.CMS_CONTENT_CACHE_DURATION)
+    # We set it to 1 day here because we actively invalidate this cache.
+    # There is absolutely NO point in making this 
+    cache.set(SITE_CHOICES_KEY, site_choices, 86400)
+    cache.set(PAGE_CHOICES_KEY, page_choices, 86400)
     return site_choices, page_choices
 
 def get_site_choices(lang=None):
@@ -52,15 +54,27 @@ def get_page_choices(lang=None):
         site_choices, page_choices = update_site_and_page_choices(lang)
     return page_choices
 
+def _get_key(prefix, lang):
+    return "%s-%s" % (prefix, lang)
+
 def get_site_cache_key(lang):
-    return "%s-%s" % (settings.CMS_SITE_CHOICES_CACHE_KEY, lang)
+    return _get_key(settings.CMS_SITE_CHOICES_CACHE_KEY, lang)
+
 def get_page_cache_key(lang):
-    return "%s-%s" % (settings.CMS_PAGE_CHOICES_CACHE_KEY, lang)
+    return _get_key(settings.CMS_PAGE_CHOICES_CACHE_KEY, lang)
+
+def _clean_many(prefix):
+    keys = []
+    for lang in [l[0] for l in settings.LANGUAGES]:
+        keys.append(_get_key(prefix, lang))
+    cache.delete_many(keys)
 
 def clean_site_choices_cache(sender, **kwargs):
-    cache.delete(settings.CMS_SITE_CHOICES_CACHE_KEY)
+    _clean_many(settings.CMS_SITE_CHOICES_CACHE_KEY)
+
 def clean_page_choices_cache(sender, **kwargs):
-    cache.delete(settings.CMS_PAGE_CHOICES_CACHE_KEY)
+    _clean_many(settings.CMS_PAGE_CHOICES_CACHE_KEY)
+
 post_save.connect(clean_page_choices_cache, sender=Page)
 post_save.connect(clean_site_choices_cache, sender=Site)
 post_delete.connect(clean_page_choices_cache, sender=Page)
